@@ -11,6 +11,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button login_button;
     Button signup_button;
+    Button list_songs_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private void define(){
         login_button = findViewById(R.id.login_button);
         signup_button = findViewById(R.id.signup_button);
+        list_songs_button = findViewById(R.id.list_songs_button);
     }
 
     private void setButtonClickListeners(){
@@ -36,6 +38,11 @@ public class MainActivity extends AppCompatActivity {
 
         signup_button.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, SignupActivity.class);
+            startActivity(intent);
+        });
+
+        list_songs_button.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, ListSongsActivity.class);
             startActivity(intent);
         });
     }

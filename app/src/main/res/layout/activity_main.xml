@@ -44,5 +44,23 @@
         android:textColor="@color/white"
         android:layout_height="wrap_content"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:background="@drawable/bg_yellow_button"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/list_songs_button"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:textSize="18sp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="15dp"
+        android:textAllCaps="false"
+        android:text="List Songs"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:layout_height="wrap_content"/>
+
 
 </LinearLayout>

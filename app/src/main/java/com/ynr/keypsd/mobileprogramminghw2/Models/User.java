@@ -74,6 +74,6 @@ public class User {
                 "Ad Soyad: " + userNameAndSurname + '\n' +
                 "Telefon: " + phone + '\n' +
                 "Email: " + email + '\n' +
-                "Şifre: '" + password + '\n';
+                "Şifre: " + password + '\n';
     }
 }

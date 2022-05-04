@@ -1,20 +1,25 @@
 package com.ynr.keypsd.mobileprogramminghw2;
 
+import static com.ynr.keypsd.mobileprogramminghw2.Utils.Keys.GMAIL_ADMIN_EMAIL;
+import static com.ynr.keypsd.mobileprogramminghw2.Utils.Keys.GMAIL_PASSWORD;
+import static com.ynr.keypsd.mobileprogramminghw2.Utils.RequestPermission.REQUEST_ID_READ_EXTERNAL_STORAGE;
+import static com.ynr.keypsd.mobileprogramminghw2.Utils.RequestPermission.checkAndRequestReadExternalStoragePermission;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -28,7 +33,6 @@ import java.util.List;
 
 public class SignupActivity extends AppCompatActivity {
 
-    public static final int REQUEST_ID_READ_EXTERNAL_STORAGE = 101;
     public static final int REQUEST_TAKE_FROM_GALLERY = 102;
 
     AppCompatImageView user_profile_photo_iv;
@@ -78,15 +82,13 @@ public class SignupActivity extends AppCompatActivity {
 
     private void setClickListeners(){
         add_profile_picture_button.setOnClickListener(v -> {
-            if(checkAndRequestPermissions(SignupActivity.this)){
-                // choose from  external storage
+            if(checkAndRequestReadExternalStoragePermission(SignupActivity.this)){
                 Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(pickPhoto , REQUEST_TAKE_FROM_GALLERY);
             }
         });
         update_profile_picture_button.setOnClickListener(view -> {
-            if(checkAndRequestPermissions(SignupActivity.this)){
-                // choose from  external storage
+            if(checkAndRequestReadExternalStoragePermission(SignupActivity.this)){
                 Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(pickPhoto , REQUEST_TAKE_FROM_GALLERY);
             }
@@ -106,19 +108,25 @@ public class SignupActivity extends AppCompatActivity {
             String confirmPasswordInput = signup_confirm_password_et.getText().toString();
 
             try{
-                if(!userNameInput.trim().equals(""))
+                if(userNameInput.trim().equals(""))
                     throw new Exception("Kullanıcı adı alanı boş bırakılamaz!");
                 if(checkIfUserNameAlreadyExists(userNameInput))
                     throw new Exception("Kullanıcı adı daha önce alınmış!");
-                if(!nameAndSurnameInput.trim().equals(""))
+                if(nameAndSurnameInput.trim().equals(""))
                     throw new Exception("Ad soyad alanı boş bırakılamaz!");
-                if(!phoneInput.trim().equals(""))
+                if(phoneInput.trim().equals(""))
                     throw new Exception("Telefon alanı boş bırakılamaz!");
-                if(!emailInput.trim().equals(""))
+                if(phoneInput.trim().length() != 11)
+                    throw new Exception("Geçerli bir telefon numarası giriniz!");
+                if(emailInput.trim().equals(""))
                     throw new Exception("Email alanı boş bırakılamaz!");
-                if(!passwordInput.trim().equals(""))
+                if(!isEmailValid(emailInput.trim()))
+                    throw new Exception("Geçerli bir email giriniz!");
+                if(passwordInput.trim().equals(""))
                     throw new Exception("Parola alanı boş bırakılamaz!");
-                if(!confirmPasswordInput.trim().equals(""))
+                if(passwordInput.trim().length() < 5 || passwordInput.trim().length() > 15)
+                    throw new Exception("Parolanız en az 5, en fazla 15 karakterden oluşmalıdır!");
+                if(confirmPasswordInput.trim().equals(""))
                     throw new Exception("Parola doğrulama alanı boş bırakılamaz!");
                 if(!passwordInput.equals(confirmPasswordInput))
                     throw new Exception("Girdiğiniz parolalar uyuşmamaktadır!");
@@ -133,6 +141,10 @@ public class SignupActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private boolean isEmailValid(CharSequence target) {
+        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 
     private void onRegisterSuccesful(User user) {
@@ -150,12 +162,12 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    MailSender sender = new MailSender("Your_Gmail_UserName@gmail.com",
-                            "Your_Gmail_password");
-                    sender.sendMail("This is a test subject", "This is the test body content",
-                            "mkeremyenerce@gmail.com", "keypsdev@gmail.com");
+                    MailSender sender = new MailSender(GMAIL_ADMIN_EMAIL,
+                            GMAIL_PASSWORD);
+                    sender.sendMail("Müzik uygulaması Üyelik Bilgileriniz", user.toString(),
+                            GMAIL_ADMIN_EMAIL, user.getEmail());
                 } catch (Exception e) {
-                    Log.e("SendMail", e.getMessage(), e);
+                    Log.i("SendMail", e.getMessage(), e);
                 }
             }
 
@@ -171,24 +183,6 @@ public class SignupActivity extends AppCompatActivity {
         return false;
     }
 
-    public static boolean checkAndRequestPermissions(final Activity context) {
-        int WExtstorePermission = ContextCompat.checkSelfPermission(context,
-                Manifest.permission.READ_EXTERNAL_STORAGE);
-        List<String> listPermissionsNeeded = new ArrayList<>();
-        if (WExtstorePermission != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded
-                    .add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
-        if (!listPermissionsNeeded.isEmpty()) {
-            ActivityCompat.requestPermissions(context,
-                    listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]),
-                    REQUEST_ID_READ_EXTERNAL_STORAGE);
-            return false;
-        }
-        return true;
-    }
-
-    // Handled permission Result
     @Override
     public void onRequestPermissionsResult(int requestCode,String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
