@@ -104,6 +104,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.MyViewHolder>{
                     .setPositiveButton("Yes", (dialog, id) -> {
                         File file = new File(song.getPath());
                         boolean exists = file.exists();
+                        if(!exists){
+                            Toast.makeText(activity, "File is not found", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
                         boolean deleted = file.delete();
 
                         if(deleted){
