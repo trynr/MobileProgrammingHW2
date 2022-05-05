@@ -70,10 +70,10 @@ public class User {
 
     @Override
     public String toString() {
-        return  "Kullanıcı Adı: " + userName + '\n' +
-                "Ad Soyad: " + userNameAndSurname + '\n' +
-                "Telefon: " + phone + '\n' +
+        return  "Username: " + userName + '\n' +
+                "Name Surname: " + userNameAndSurname + '\n' +
+                "Phone: " + phone + '\n' +
                 "Email: " + email + '\n' +
-                "Şifre: " + password + '\n';
+                "Password: " + password + '\n';
     }
 }

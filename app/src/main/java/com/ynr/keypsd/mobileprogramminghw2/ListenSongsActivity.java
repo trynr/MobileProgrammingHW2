@@ -4,16 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
 
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ynr.keypsd.mobileprogramminghw2.Helpers.MediaPlayerHelper;
+import com.ynr.keypsd.mobileprogramminghw2.Helpers.MusicPlayerHelper;
 import com.ynr.keypsd.mobileprogramminghw2.Models.Song;
 
 public class ListenSongsActivity extends AppCompatActivity {
@@ -28,7 +26,7 @@ public class ListenSongsActivity extends AppCompatActivity {
     TextView songAlbumTv;
     AppCompatImageButton btnPrev;
     AppCompatImageButton btnNext;
-    MediaPlayerHelper mediaPlayerHelper;
+    MusicPlayerHelper musicPlayerHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +38,7 @@ public class ListenSongsActivity extends AppCompatActivity {
         song = (Song) bundle.getSerializable("song");
         selectedSongPosition = bundle.getInt("selectedSongPosition");
         songPaths = bundle.getStringArray("songPaths");
-        mediaPlayerHelper = new MediaPlayerHelper(ListenSongsActivity.this, song);
+        musicPlayerHelper = new MusicPlayerHelper(ListenSongsActivity.this, song);
         setSongInformationsInView();
         setButtonClickListeners();
 
@@ -48,14 +46,14 @@ public class ListenSongsActivity extends AppCompatActivity {
 
     private void setButtonClickListeners() {
         btnNext.setOnClickListener(view -> {
-            mediaPlayerHelper.onStop();
+            musicPlayerHelper.onStop();
             if(selectedSongPosition != songPaths.length - 1)
                 selectedSongPosition += 1;
             navigateToNewSong(selectedSongPosition);
         });
 
         btnPrev.setOnClickListener(view -> {
-            mediaPlayerHelper.onStop();
+            musicPlayerHelper.onStop();
             if(selectedSongPosition != 0)
                 selectedSongPosition -= 1;
             navigateToNewSong(selectedSongPosition);
@@ -69,7 +67,7 @@ public class ListenSongsActivity extends AppCompatActivity {
 
         String newPath = songPaths[selectedSongPosition];
         song = getSongFromExternalStorage(newPath);
-        mediaPlayerHelper = new MediaPlayerHelper(ListenSongsActivity.this, song);
+        musicPlayerHelper = new MusicPlayerHelper(ListenSongsActivity.this, song);
         setSongInformationsInView();
     }
 
@@ -138,14 +136,14 @@ public class ListenSongsActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if(mediaPlayerHelper != null)
-            mediaPlayerHelper.onPause();
+        if(musicPlayerHelper != null)
+            musicPlayerHelper.onPause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(mediaPlayerHelper != null)
-            mediaPlayerHelper.onPause();
+        if(musicPlayerHelper != null)
+            musicPlayerHelper.onPause();
     }
 }

@@ -11,7 +11,9 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -49,6 +51,9 @@ public class SignupActivity extends AppCompatActivity {
     List<User> registeredUsers;
     Bitmap userProfilePicture;
 
+    private SharedPreferences mPrefs;
+    private SharedPreferences.Editor prefsEditor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,13 +76,16 @@ public class SignupActivity extends AppCompatActivity {
         update_profile_picture_button = findViewById(R.id.update_profile_picture_button);
         delete_profile_picture_button = findViewById(R.id.delete_profile_picture_button);
 
+        mPrefs = getSharedPreferences("MusicPlayerSP", Context.MODE_PRIVATE);
+        prefsEditor = mPrefs.edit();
+
         registeredUsers = new ArrayList<>();
         registeredUsers.add(new User(null, "user1", "Kerem Yener", "02122213123",
-                "kerem@gmail.com", "123"));
+                "kerem@gmail.com", "123456"));
         registeredUsers.add(new User(null, "user2", "Mehmet Yener", "02123212321",
-                "mehmet@gmail.com", "1234"));
+                "mehmet@gmail.com", "123456"));
         registeredUsers.add(new User(null, "user3", "Ahmet Yener", "02121234123",
-                "ahmet@gmail.com", "132"));
+                "ahmet@gmail.com", "123456"));
     }
 
     private void setClickListeners(){
@@ -109,27 +117,27 @@ public class SignupActivity extends AppCompatActivity {
 
             try{
                 if(userNameInput.trim().equals(""))
-                    throw new Exception("Kullanıcı adı alanı boş bırakılamaz!");
+                    throw new Exception("Username field cannot be empty!");
                 if(checkIfUserNameAlreadyExists(userNameInput))
-                    throw new Exception("Kullanıcı adı daha önce alınmış!");
+                    throw new Exception("Username is already taken!");
                 if(nameAndSurnameInput.trim().equals(""))
-                    throw new Exception("Ad soyad alanı boş bırakılamaz!");
+                    throw new Exception("Name Surname field cannot be empty!");
                 if(phoneInput.trim().equals(""))
-                    throw new Exception("Telefon alanı boş bırakılamaz!");
+                    throw new Exception("Phone field cannot be empty!");
                 if(phoneInput.trim().length() != 11)
-                    throw new Exception("Geçerli bir telefon numarası giriniz!");
+                    throw new Exception("Please enter a valid phone number!");
                 if(emailInput.trim().equals(""))
-                    throw new Exception("Email alanı boş bırakılamaz!");
+                    throw new Exception("Email field cannot be empty!");
                 if(!isEmailValid(emailInput.trim()))
-                    throw new Exception("Geçerli bir email giriniz!");
+                    throw new Exception("Please enter a valid email!");
                 if(passwordInput.trim().equals(""))
-                    throw new Exception("Parola alanı boş bırakılamaz!");
+                    throw new Exception("Password field cannot be empty!");
                 if(passwordInput.trim().length() < 5 || passwordInput.trim().length() > 15)
-                    throw new Exception("Parolanız en az 5, en fazla 15 karakterden oluşmalıdır!");
+                    throw new Exception("Password should have at least 5, at most 15 characters!");
                 if(confirmPasswordInput.trim().equals(""))
-                    throw new Exception("Parola doğrulama alanı boş bırakılamaz!");
+                    throw new Exception("Confirm Password field cannot be empty!");
                 if(!passwordInput.equals(confirmPasswordInput))
-                    throw new Exception("Girdiğiniz parolalar uyuşmamaktadır!");
+                    throw new Exception("Passwords you entered do not match!");
 
                 User user = new User(null, userNameInput, nameAndSurnameInput, phoneInput, emailInput, passwordInput);
                 onRegisterSuccesful(user);
@@ -148,9 +156,13 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void onRegisterSuccesful(User user) {
-        Toast.makeText(SignupActivity.this, "Başarıyla kayıt oldunuz.", Toast.LENGTH_LONG).show();
+        Toast.makeText(SignupActivity.this, "Register successful!", Toast.LENGTH_LONG).show();
 
         sendEmailToUser(user);
+
+        prefsEditor.putString("username", user.getUserName());
+        prefsEditor.putString("password", user.getPassword());
+        prefsEditor.commit();
 
         Intent intent = new Intent(SignupActivity.this, MainActivity.class);
         startActivity(intent);
@@ -164,7 +176,7 @@ public class SignupActivity extends AppCompatActivity {
                 try {
                     MailSender sender = new MailSender(GMAIL_ADMIN_EMAIL,
                             GMAIL_PASSWORD);
-                    sender.sendMail("Müzik uygulaması Üyelik Bilgileriniz", user.toString(),
+                    sender.sendMail("Music Player App User Informations", user.toString(),
                             GMAIL_ADMIN_EMAIL, user.getEmail());
                 } catch (Exception e) {
                     Log.i("SendMail", e.getMessage(), e);
@@ -191,7 +203,7 @@ public class SignupActivity extends AppCompatActivity {
                 if (ContextCompat.checkSelfPermission(SignupActivity.this,
                         Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(getApplicationContext(),
-                            "Storage erişimi gereklidir.",
+                            "Storage access is needed.",
                             Toast.LENGTH_SHORT).show();
                 }
                 break;

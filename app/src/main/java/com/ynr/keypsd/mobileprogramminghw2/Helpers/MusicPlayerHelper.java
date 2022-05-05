@@ -23,7 +23,7 @@ import com.ynr.keypsd.mobileprogramminghw2.R;
 import java.io.IOException;
 import java.io.Serializable;
 
-public class MediaPlayerHelper implements Serializable {
+public class MusicPlayerHelper implements Serializable {
 
     public static final int MAX_PROGRESS = 10000;
 
@@ -36,9 +36,8 @@ public class MediaPlayerHelper implements Serializable {
     private TextView tv_song_total_duration;
     public MediaPlayer mp;
     private Handler mHandler = new Handler();
-    int mp_success;
 
-    public MediaPlayerHelper(Activity activity, Song song){
+    public MusicPlayerHelper(Activity activity, Song song){
         this.activity = activity;
 
         defineViews(activity);
@@ -159,8 +158,7 @@ public class MediaPlayerHelper implements Serializable {
             mp = MediaPlayer.create(activity, Uri.parse(song.getPath()));
         }
         catch (Exception e) {
-            mp_success = 0;
-            Toast.makeText(activity, "Ses dosyası yüklenemedi!", Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, "Audio file could not be loaded.", Toast.LENGTH_LONG).show();
         }
     }
 

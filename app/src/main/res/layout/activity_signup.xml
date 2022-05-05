@@ -49,7 +49,7 @@
                         android:layout_marginBottom="5dp"
                         android:textSize="12sp"
                         android:textAllCaps="false"
-                        android:text="Fotoğraf Ekle"
+                        android:text="Add Photo"
                         android:textStyle="bold"
                         android:textColor="@color/white"
                         android:layout_height="wrap_content"/>
@@ -63,7 +63,7 @@
                         android:textSize="12sp"
                         android:textAllCaps="false"
                         android:visibility="gone"
-                        android:text="Fotoğraf Güncelle"
+                        android:text="Update Photo"
                         android:textStyle="bold"
                         android:layout_marginBottom="5dp"
                         android:textColor="@color/white"
@@ -78,7 +78,7 @@
                         android:visibility="gone"
                         android:textSize="12sp"
                         android:textAllCaps="false"
-                        android:text="Fotoğraf Sil"
+                        android:text="Delete Photo"
                         android:textStyle="bold"
                         android:layout_marginBottom="5dp"
                         android:textColor="@color/white"
@@ -91,7 +91,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Kullanıcı Adı"
+                android:hint="Username"
                 android:layout_margin="5dp"
                 app:boxBackgroundColor="@color/white"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -105,7 +105,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ad Soyad"
+                android:hint="Name Surname"
                 android:layout_margin="5dp"
                 app:boxBackgroundColor="@color/white"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -120,7 +120,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Telefon"
+                android:hint="Phone"
                 android:layout_margin="5dp"
                 app:boxBackgroundColor="@color/white"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -150,7 +150,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Parola"
+                android:hint="Password"
                 android:layout_margin="5dp"
                 app:boxBackgroundColor="@color/white"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -165,7 +165,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Parola doğrula"
+                android:hint="Confirm password"
                 android:layout_margin="5dp"
                 app:boxBackgroundColor="@color/white"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -190,7 +190,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="15dp"
                 android:textAllCaps="false"
-                android:text="Kayıt ol"
+                android:text="Register"
                 android:textStyle="bold"
                 android:textColor="@color/white"
                 android:layout_height="wrap_content"/>

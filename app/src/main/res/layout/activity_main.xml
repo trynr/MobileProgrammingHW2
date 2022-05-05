@@ -2,17 +2,57 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_gravity="center"
     android:orientation="vertical"
     android:layout_height="wrap_content"
     tools:context=".MainActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_marginBottom="15dp"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/username"
+            android:layout_margin="5dp"
+            app:boxBackgroundColor="@color/white"
+            android:id="@+id/login_username_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:id="@+id/login_username_et"
+                android:textSize="16sp"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:hint="@string/password"
+            app:boxBackgroundColor="@color/white"
+            android:id="@+id/login_password_layout"
+            app:passwordToggleEnabled="true"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:id="@+id/login_password_et"
+                android:inputType="textPassword"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
     <Button
         android:layout_width="wrap_content"
         android:background="@drawable/bg_yellow_button"
-        android:layout_gravity="center_horizontal"
-        android:id="@+id/login_button"
+        android:layout_gravity="center"
+        android:id="@+id/login_complete_button"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:paddingTop="5dp"
@@ -21,11 +61,10 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="15dp"
         android:textAllCaps="false"
-        android:text="Giriş Yap"
+        android:text="Login"
         android:textStyle="bold"
         android:textColor="@color/white"
         android:layout_height="wrap_content"/>
-
     <Button
         android:layout_width="wrap_content"
         android:background="@drawable/bg_yellow_button"
@@ -39,7 +78,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="15dp"
         android:textAllCaps="false"
-        android:text="Kayıt ol"
+        android:text="Register"
         android:textStyle="bold"
         android:textColor="@color/white"
         android:layout_height="wrap_content"/>
@@ -49,6 +88,7 @@
         android:background="@drawable/bg_yellow_button"
         android:layout_gravity="center_horizontal"
         android:id="@+id/list_songs_button"
+        android:visibility="gone"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:paddingTop="5dp"

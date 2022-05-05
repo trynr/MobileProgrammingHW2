@@ -2,7 +2,9 @@ package com.ynr.keypsd.mobileprogramminghw2.Adapters;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -14,11 +16,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.ynr.keypsd.mobileprogramminghw2.ListenSongsActivity;
+import com.ynr.keypsd.mobileprogramminghw2.Models.Playlist;
 import com.ynr.keypsd.mobileprogramminghw2.Models.Song;
 import com.ynr.keypsd.mobileprogramminghw2.R;
 
@@ -31,10 +36,18 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.MyViewHolder>{
     private Activity activity;
     private List<Song> songList;
     private String[] songPaths;
+    private List<Song> selectedForPlaylistSongs;
+    private List<Playlist> playlists;
+    private SharedPreferences mPrefs;
+    private SharedPreferences.Editor prefsEditor;
 
-    public SongAdapter(List<Song> songList, Activity activity) {
+    public SongAdapter(List<Song> songList, Activity activity, List<Song> selectedForPlaylistSongs, List<Playlist> playlists) {
         this.activity = activity;
         this.songList = songList;
+        this.selectedForPlaylistSongs = selectedForPlaylistSongs;
+        this.playlists = playlists;
+        mPrefs = activity.getSharedPreferences("MusicPlayerSP", Context.MODE_PRIVATE);
+        prefsEditor = mPrefs.edit();
     }
 
     @NonNull
@@ -55,12 +68,20 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.MyViewHolder>{
         Song song = songList.get(position);
         int songPosition = position;
 
-        holder.songAdapterLayout.setOnClickListener(view -> {
-            Intent intent = new Intent(activity, ListenSongsActivity.class);
-            intent.putExtra("song", song);
-            intent.putExtra("selectedSongPosition", songPosition);
-            intent.putExtra("songPaths", songPaths);
-            activity.startActivity(intent);
+        holder.songAdapterLayout.setBackgroundColor(activity.getResources().getColor(R.color.white));
+
+        holder.songAdapterLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!selectedForPlaylistSongs.contains(song)){
+                    selectedForPlaylistSongs.add(song);
+                    holder.songAdapterLayout.setBackgroundColor(activity.getResources().getColor(R.color.Orange));
+                }
+                else{
+                    selectedForPlaylistSongs.remove(song);
+                    holder.songAdapterLayout.setBackgroundColor(activity.getResources().getColor(R.color.white));
+                }
+            }
         });
 
         if(song.getAlbumImageEncoded() != null)
@@ -72,18 +93,43 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.MyViewHolder>{
         holder.songDurationTv.setText(getProperDurationString(song.getDuration()));
 
         holder.deleteIcon.setOnClickListener(view -> {
-            File file = new File(song.getPath());
-            boolean exists = file.exists();
-            boolean deleted = file.getAbsoluteFile().delete();
 
-            if(deleted){
-                Toast.makeText(activity, "File deleted successfully", Toast.LENGTH_SHORT).show();
-                songList.remove(songPosition);
-                notifyDataSetChanged();
-            }
-            else{
-                Toast.makeText(activity, "File cannot be deleted.", Toast.LENGTH_SHORT).show();
-            }
+            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
+            // set title
+            alertDialogBuilder.setTitle("");
+            // set dialog message
+            alertDialogBuilder
+                    .setMessage("Are you sure you want to delete this song?")
+                    .setCancelable(true)
+                    .setPositiveButton("Yes", (dialog, id) -> {
+                        File file = new File(song.getPath());
+                        boolean exists = file.exists();
+                        boolean deleted = file.delete();
+
+                        if(deleted){
+                            Toast.makeText(activity, "File deleted successfully", Toast.LENGTH_SHORT).show();
+                            songList.remove(songPosition);
+                            for(Playlist playlist: playlists){
+                                int deletedSongIndex = playlist.getSongs().indexOf(song);
+                                if(deletedSongIndex != -1)
+                                    playlist.getSongs().remove(deletedSongIndex);
+                            }
+                            notifyDataSetChanged();
+                            Gson gson = new Gson();
+                            String jsonStr = gson.toJson(playlists.subList(1, playlists.size()).toArray());
+                            prefsEditor.putString("playlists", jsonStr);
+                            prefsEditor.commit();
+                        }
+                        else{
+                            Toast.makeText(activity, "File cannot be deleted.", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setNegativeButton("No", (dialog, id) -> dialog.dismiss());
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+
+            // show it
+            alertDialog.show();
 
         });
 
@@ -95,6 +141,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.MyViewHolder>{
             activity.startActivity(Intent.createChooser(share, "Share Sound File"));
         });
 
+        holder.playIcon.setOnClickListener(view -> {
+            Intent intent = new Intent(activity, ListenSongsActivity.class);
+            intent.putExtra("song", song);
+            intent.putExtra("selectedSongPosition", songPosition);
+            intent.putExtra("songPaths", songPaths);
+            activity.startActivity(intent);
+        });
 
     }
 
@@ -121,6 +174,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.MyViewHolder>{
         TextView songDurationTv;
         ImageView deleteIcon;
         ImageView shareIcon;
+        ImageView playIcon;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -132,6 +186,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.MyViewHolder>{
             songDurationTv = itemView.findViewById(R.id.songDurationTv);
             deleteIcon = itemView.findViewById(R.id.deleteIcon);
             shareIcon = itemView.findViewById(R.id.shareIcon);
+            playIcon = itemView.findViewById(R.id.playIcon);
         }
     }
 

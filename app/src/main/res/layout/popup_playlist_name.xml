@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_height="match_parent">
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        app:cardCornerRadius="15dp"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:padding="15dp"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="24dp"
+                app:srcCompat="@drawable/ic_close"
+                android:layout_margin="5dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:elevation="5dp"
+                android:id="@+id/close_icon_playlist_name"
+                android:layout_gravity="right"
+                android:layout_height="24dp"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:id="@+id/et_playlist_name"
+                android:hint="Playlist name"
+                android:padding="10dp"
+                android:textSize="16sp"
+                android:layout_marginTop="5dp"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:text="Create Playlist"
+                android:id="@+id/accept_playlist_name_button"
+                android:textSize="18sp"
+                android:padding="10dp"
+                android:layout_margin="8dp"
+                android:textColor="@color/white"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
