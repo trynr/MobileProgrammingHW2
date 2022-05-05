@@ -14,7 +14,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static String loginSuccess = "loginSuccess";
+    public static String loginSuccess = "loginSuccess";
 
     TextInputEditText login_username_et;
     TextInputEditText login_password_et;
@@ -102,21 +102,9 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        if(!username.equals(usernameInput) && password.equals(passwordInput)){
-            Toast.makeText(MainActivity.this,
-                    "Username is wrong!",
-                    Toast.LENGTH_LONG).show();
-        }
-        else if(username.equals(usernameInput) && !password.equals(passwordInput)){
-            Toast.makeText(MainActivity.this,
-                    "Password is wrong!",
-                    Toast.LENGTH_LONG).show();
-        }
-        else{
-            Toast.makeText(MainActivity.this,
-                    "Username and password wrong!",
-                    Toast.LENGTH_LONG).show();
-        }
+        Toast.makeText(MainActivity.this,
+                "Username or password is wrong!",
+                Toast.LENGTH_LONG).show();
 
     }
 

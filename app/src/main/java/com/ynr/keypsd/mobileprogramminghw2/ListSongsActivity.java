@@ -3,6 +3,7 @@ package com.ynr.keypsd.mobileprogramminghw2;
 import static android.view.View.GONE;
 import com.google.gson.*;
 
+import static com.ynr.keypsd.mobileprogramminghw2.MainActivity.loginSuccess;
 import static com.ynr.keypsd.mobileprogramminghw2.Utils.RequestPermission.REQUEST_ID_READ_EXTERNAL_STORAGE;
 import static com.ynr.keypsd.mobileprogramminghw2.Utils.RequestPermission.checkAndRequestReadExternalStoragePermission;
 
@@ -24,6 +25,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -224,6 +228,25 @@ public class ListSongsActivity extends AppCompatActivity {
                     setSongsRecyclerView();
                 break;
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_signout, menu);
+
+        MenuItem signoutIcon = menu.findItem(R.id.signout_icon);
+        signoutIcon.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                prefsEditor.putBoolean(loginSuccess, false);
+                prefsEditor.commit();
+                startActivity(new Intent(ListSongsActivity.this, MainActivity.class));
+                return true;
+            }
+        });
+
+        return true;
     }
 
     @Override

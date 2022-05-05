@@ -121,7 +121,7 @@ public class MusicPlayerHelper implements Serializable {
         int seconds = (int) ((currentDuration % (1000 * 60 * 60)) % (1000 * 60) / 1000);
         int seconds_sum = minutes * 60 + seconds;
         int current_second = seconds_sum;
-        if(currentDuration >= totalDuration - 500){  //TODO -500 yaptık ama...
+        if(currentDuration >= totalDuration - 500){
             btn_play.setImageResource(R.drawable.ic_play_arrow);
         }
 
