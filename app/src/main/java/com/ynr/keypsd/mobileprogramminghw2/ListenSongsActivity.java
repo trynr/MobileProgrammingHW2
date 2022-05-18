@@ -3,6 +3,8 @@ package com.ynr.keypsd.mobileprogramminghw2;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
 
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -13,8 +15,11 @@ import android.widget.TextView;
 
 import com.ynr.keypsd.mobileprogramminghw2.Helpers.MusicPlayerHelper;
 import com.ynr.keypsd.mobileprogramminghw2.Models.Song;
+import com.ynr.keypsd.mobileprogramminghw2.Utils.MotionAndLocationBroadcastReceiver;
 
 public class ListenSongsActivity extends AppCompatActivity {
+
+    private static final String ACTION_NAME = "MotionAndLocation";
 
     Song song;
     String[] songPaths;
@@ -27,6 +32,7 @@ public class ListenSongsActivity extends AppCompatActivity {
     AppCompatImageButton btnPrev;
     AppCompatImageButton btnNext;
     MusicPlayerHelper musicPlayerHelper;
+    BroadcastReceiver br;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +45,22 @@ public class ListenSongsActivity extends AppCompatActivity {
         selectedSongPosition = bundle.getInt("selectedSongPosition");
         songPaths = bundle.getStringArray("songPaths");
         musicPlayerHelper = new MusicPlayerHelper(ListenSongsActivity.this, song);
+        registerBroadcastReceiver();
         setSongInformationsInView();
         setButtonClickListeners();
 
     }
+
+    //region Added for Mobile Programming Homework3.
+    private void registerBroadcastReceiver(){
+        br = new MotionAndLocationBroadcastReceiver();
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_NAME);
+        registerReceiver(br, filter);
+    }
+
+    //endregion
 
     private void setButtonClickListeners() {
         btnNext.setOnClickListener(view -> {
@@ -145,5 +163,6 @@ public class ListenSongsActivity extends AppCompatActivity {
         super.onDestroy();
         if(musicPlayerHelper != null)
             musicPlayerHelper.onPause();
+        unregisterReceiver(br);
     }
 }
